@@ -303,7 +303,7 @@ class Settings {
       vapidPublic: '',
       main: {
         apiKey: '',
-        applicationTitle: 'Jellyseerr',
+        applicationTitle: 'Rais Requests',
         applicationUrl: '',
         csrfProtection: false,
         cacheImages: false,
@@ -356,7 +356,7 @@ class Settings {
               ignoreTls: false,
               requireTls: false,
               allowSelfSigned: false,
-              senderName: 'Jellyseerr',
+              senderName: 'Rais Requests',
             },
           },
           discord: {
