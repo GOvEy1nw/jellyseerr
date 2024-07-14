@@ -151,7 +151,7 @@ const Sidebar = ({ open, setClosed }: SidebarProps) => {
                     <div className="flex flex-shrink-0 items-center px-2">
                       <span className="px-4 text-xl text-gray-50">
                         <a href="/">
-                          <img src="/logo_full.svg" alt="Logo" />
+                          <img src="/logo_stacked.svg" alt="Logo" style={{ width: '100%', height: 'auto' }} />
                         </a>
                       </span>
                     </div>
