@@ -159,8 +159,8 @@ const Sidebar = ({ open, setClosed }: SidebarProps) => {
                       {SidebarLinks.filter((link) =>
                         link.requiredPermission
                           ? hasPermission(link.requiredPermission, {
-                              type: link.permissionType ?? 'and',
-                            })
+                            type: link.permissionType ?? 'and',
+                          })
                           : true
                       ).map((sidebarLink) => {
                         return (
@@ -179,12 +179,11 @@ const Sidebar = ({ open, setClosed }: SidebarProps) => {
                               role="button"
                               tabIndex={0}
                               className={`flex items-center rounded-md px-2 py-2 text-base font-medium leading-6 text-white transition duration-150 ease-in-out focus:outline-none
-                                ${
-                                  router.pathname.match(
-                                    sidebarLink.activeRegExp
-                                  )
-                                    ? 'bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500'
-                                    : 'hover:bg-gray-700 focus:bg-gray-700'
+                                ${router.pathname.match(
+                                sidebarLink.activeRegExp
+                              )
+                                  ? 'bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500'
+                                  : 'hover:bg-gray-700 focus:bg-gray-700'
                                 }
                               `}
                               data-testid={`${sidebarLink.dataTestId}-mobile`}
@@ -233,8 +232,8 @@ const Sidebar = ({ open, setClosed }: SidebarProps) => {
                 {SidebarLinks.filter((link) =>
                   link.requiredPermission
                     ? hasPermission(link.requiredPermission, {
-                        type: link.permissionType ?? 'and',
-                      })
+                      type: link.permissionType ?? 'and',
+                    })
                     : true
                 ).map((sidebarLink) => {
                   return (
@@ -245,13 +244,12 @@ const Sidebar = ({ open, setClosed }: SidebarProps) => {
                     >
                       <a
                         className={`group flex items-center rounded-md px-2 py-2 text-lg font-medium leading-6 text-white transition duration-150 ease-in-out focus:outline-none
-                                ${
-                                  router.pathname.match(
-                                    sidebarLink.activeRegExp
-                                  )
-                                    ? 'bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500'
-                                    : 'hover:bg-gray-700 focus:bg-gray-700'
-                                }
+                                ${router.pathname.match(
+                          sidebarLink.activeRegExp
+                        )
+                            ? 'bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500'
+                            : 'hover:bg-gray-700 focus:bg-gray-700'
+                          }
                               `}
                         data-testid={sidebarLink.dataTestId}
                       >
