@@ -30,7 +30,7 @@ const messages: { [messageName: string]: MessageDescriptor } = defineMessages({
   jobsandcache: 'Jobs & Cache',
   jobs: 'Jobs',
   jobsDescription:
-    'Jellyseerr performs certain maintenance tasks as regularly-scheduled jobs, but they can also be manually triggered below. Manually running a job will not alter its schedule.',
+    'Rais Requests performs certain maintenance tasks as regularly-scheduled jobs, but they can also be manually triggered below. Manually running a job will not alter its schedule.',
   jobname: 'Job Name',
   jobtype: 'Type',
   nextexecution: 'Next Execution',
@@ -42,7 +42,7 @@ const messages: { [messageName: string]: MessageDescriptor } = defineMessages({
   command: 'Command',
   cache: 'Cache',
   cacheDescription:
-    'Jellyseerr caches requests to external API endpoints to optimize performance and avoid making unnecessary API calls.',
+    'Rais Requests caches requests to external API endpoints to optimize performance and avoid making unnecessary API calls.',
   cacheflushed: '{cachename} cache flushed.',
   cachename: 'Cache Name',
   cachehits: 'Hits',
@@ -76,7 +76,7 @@ const messages: { [messageName: string]: MessageDescriptor } = defineMessages({
     'Every {jobScheduleSeconds, plural, one {second} other {{jobScheduleSeconds} seconds}}',
   imagecache: 'Image Cache',
   imagecacheDescription:
-    'When enabled in settings, Jellyseerr will proxy and cache images from pre-configured external sources. Cached images are saved into your config folder. You can find the files in <code>{appDataPath}/cache/images</code>.',
+    'When enabled in settings, Rais Requests will proxy and cache images from pre-configured external sources. Cached images are saved into your config folder. You can find the files in <code>{appDataPath}/cache/images</code>.',
   imagecachecount: 'Images Cached',
   imagecachesize: 'Total Cache Size',
 });
@@ -102,8 +102,8 @@ type JobModalState = {
 type JobModalAction =
   | { type: 'set'; hours?: number; minutes?: number; seconds?: number }
   | {
-      type: 'close';
-    }
+    type: 'close';
+  }
   | { type: 'open'; job?: Job };
 
 const jobModalReducer = (
@@ -422,7 +422,7 @@ const SettingsJobs = () => {
                       value={Math.floor(
                         (new Date(job.nextExecutionTime).getTime() -
                           Date.now()) /
-                          1000
+                        1000
                       )}
                       updateIntervalInSeconds={1}
                       numeric="auto"
@@ -482,7 +482,7 @@ const SettingsJobs = () => {
                 (cache) =>
                   !(
                     settings.currentSettings.mediaServerType !==
-                      MediaServerType.PLEX && cache.id === 'plexguid'
+                    MediaServerType.PLEX && cache.id === 'plexguid'
                   )
               )
               .map((cache) => (

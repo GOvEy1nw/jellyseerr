@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 
 const messages = defineMessages({
-  welcome: 'Welcome to Jellyseerr',
+  welcome: 'Welcome to Rais Requests',
   signinMessage: 'Get started by signing in with your Plex account',
 });
 

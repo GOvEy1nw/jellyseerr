@@ -233,7 +233,7 @@
           "COMMIT_TAG": "$GIT_SHA"
         },
         "imageNames": [
-          "fallenbagel/jellyseerr"
+          "GOvEy1nw/jellyseerr"
         ],
         "platforms": [
           "linux/amd64",

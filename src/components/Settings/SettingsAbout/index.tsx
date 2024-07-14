@@ -16,7 +16,7 @@ import useSWR from 'swr';
 
 const messages = defineMessages({
   about: 'About',
-  overseerrinformation: 'About Jellyseerr',
+  overseerrinformation: 'About Rais Requests',
   version: 'Version',
   totalmedia: 'Total Media',
   totalrequests: 'Total Requests',
