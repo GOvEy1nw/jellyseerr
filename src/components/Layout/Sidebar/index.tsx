@@ -224,7 +224,7 @@ const Sidebar = ({ open, setClosed }: SidebarProps) => {
               <div className="flex flex-shrink-0 items-center">
                 <span className="px-4 text-2xl text-gray-50">
                   <a href="/">
-                    <img src="/logo_full.webp" alt="Logo" style={{ width: '100%', height: 'auto' }} />
+                    <img src="/logo_rais.webp" alt="Logo" style={{ width: '100%', height: 'auto' }} />
                   </a>
                 </span>
               </div>
