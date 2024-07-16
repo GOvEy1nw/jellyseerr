@@ -86,14 +86,14 @@ const Login = () => {
         <LanguagePicker />
       </div>
       <div className="relative z-40 mt-10 flex flex-col items-center px-4 sm:mx-auto sm:w-full sm:max-w-md">
-        <img src="/logo_stacked.webp" className="mb-10 max-w-full" alt="Logo" />
-        <h2 className="mt-2 text-center text-3xl font-extrabold leading-9 text-gray-100">
+        <img src="/logo_stacked.webp" className="mb-2" alt="Logo" style={{ maxWidth: '50%', filter: 'drop-shadow(0px 20px 60px #222)' }} />
+        <h2 className="mt-2 text-center text-xl font-extrabold leading-9 text-gray-100">
           {intl.formatMessage(messages.signinheader)}
         </h2>
       </div>
-      <div className="relative z-50 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="relative z-50 mt-2 sm:mx-auto sm:w-full" style={{ display: 'flex', justifyContent: 'center', overflow: 'hidden', borderRadius: '20px' }}>
         <div
-          className="bg-gray-800 bg-opacity-50 shadow sm:rounded-lg"
+          className="bg-gray-800 bg-opacity-50 shadow"
           style={{ backdropFilter: 'blur(5px)' }}
         >
           <>
@@ -158,8 +158,8 @@ const Login = () => {
                     <div>
                       <button
                         className={`w-full cursor-default bg-gray-800 bg-opacity-70 py-2 text-center text-sm font-bold text-gray-400 transition-colors duration-200 hover:cursor-pointer hover:bg-gray-700 focus:outline-none ${openIndexes.includes(1)
-                            ? 'text-indigo-500'
-                            : 'sm:rounded-b-lg'
+                          ? 'text-indigo-500'
+                          : 'sm:rounded-b-lg'
                           }`}
                         onClick={() => handleClick(1)}
                       >

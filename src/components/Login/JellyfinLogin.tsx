@@ -123,7 +123,7 @@ const JellyfinLogin: React.FC<JellyfinLoginProps> = ({
       >
         {({ errors, touched, isSubmitting, isValid }) => (
           <Form>
-            <div className="sm:border-t sm:border-gray-800">
+            <div>
               <label htmlFor="host" className="text-label">
                 {intl.formatMessage(messages.host, mediaServerFormatValues)}
               </label>
@@ -175,9 +175,6 @@ const JellyfinLogin: React.FC<JellyfinLoginProps> = ({
                   <div className="error">{errors.email}</div>
                 )}
               </div>
-              <label htmlFor="username" className="text-label">
-                {intl.formatMessage(messages.username)}
-              </label>
               <div className="mt-1 mb-2 sm:col-span-2 sm:mt-0">
                 <div className="flex rounded-md shadow-sm">
                   <Field
@@ -191,9 +188,6 @@ const JellyfinLogin: React.FC<JellyfinLoginProps> = ({
                   <div className="error">{errors.username}</div>
                 )}
               </div>
-              <label htmlFor="password" className="text-label">
-                {intl.formatMessage(messages.password)}
-              </label>
               <div className="mt-1 mb-2 sm:col-span-2 sm:mt-0">
                 <div className="flexrounded-md shadow-sm">
                   <Field
@@ -275,10 +269,7 @@ const JellyfinLogin: React.FC<JellyfinLoginProps> = ({
             return (
               <>
                 <Form>
-                  <div className="sm:border-t sm:border-gray-800">
-                    <label htmlFor="username" className="text-label">
-                      {intl.formatMessage(messages.username)}
-                    </label>
+                  <div>
                     <div className="mt-1 mb-2 sm:col-span-2 sm:mt-0">
                       <div className="flex max-w-lg rounded-md shadow-sm">
                         <Field
@@ -292,9 +283,6 @@ const JellyfinLogin: React.FC<JellyfinLoginProps> = ({
                         <div className="error">{errors.username}</div>
                       )}
                     </div>
-                    <label htmlFor="password" className="text-label">
-                      {intl.formatMessage(messages.password)}
-                    </label>
                     <div className="mt-1 mb-2 sm:col-span-2 sm:mt-0">
                       <div className="flex max-w-lg rounded-md shadow-sm">
                         <Field
@@ -309,7 +297,7 @@ const JellyfinLogin: React.FC<JellyfinLoginProps> = ({
                       )}
                     </div>
                   </div>
-                  <div className="mt-8 border-t border-gray-700 pt-5">
+                  <div className="pt-5">
                     <div className="flex justify-between">
                       <span className="inline-flex rounded-md shadow-sm">
                         <Button
@@ -318,11 +306,10 @@ const JellyfinLogin: React.FC<JellyfinLoginProps> = ({
                           href={
                             jellyfinForgotPasswordUrl
                               ? `${jellyfinForgotPasswordUrl}`
-                              : `${baseUrl}/web/index.html#!/${
-                                  process.env.JELLYFIN_TYPE === 'emby'
-                                    ? 'startup/'
-                                    : ''
-                                }forgotpassword.html`
+                              : `${baseUrl}/web/index.html#!/${process.env.JELLYFIN_TYPE === 'emby'
+                                ? 'startup/'
+                                : ''
+                              }forgotpassword.html`
                           }
                         >
                           {intl.formatMessage(messages.forgotpassword)}

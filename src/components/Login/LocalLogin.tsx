@@ -71,11 +71,6 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
           <>
             <Form>
               <div>
-                <label htmlFor="email" className="text-label">
-                  {intl.formatMessage(messages.email) +
-                    ' / ' +
-                    intl.formatMessage(messages.username)}
-                </label>
                 <div className="mt-1 mb-2 sm:col-span-2 sm:mt-0">
                   <div className="form-input-field">
                     <Field
@@ -84,6 +79,7 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
                       type="text"
                       inputMode="email"
                       data-testid="email"
+                      placeholder={intl.formatMessage(messages.username)}
                     />
                   </div>
                   {errors.email &&
@@ -92,9 +88,6 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
                       <div className="error">{errors.email}</div>
                     )}
                 </div>
-                <label htmlFor="password" className="text-label">
-                  {intl.formatMessage(messages.password)}
-                </label>
                 <div className="mt-1 mb-2 sm:col-span-2 sm:mt-0">
                   <div className="form-input-field">
                     <SensitiveInput
@@ -104,6 +97,7 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
                       type="password"
                       autoComplete="current-password"
                       data-testid="password"
+                      placeholder={intl.formatMessage(messages.password)}
                     />
                   </div>
                   {errors.password &&
@@ -118,7 +112,7 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
                   </div>
                 )}
               </div>
-              <div className="mt-8 border-t border-gray-700 pt-5">
+              <div className="pt-5">
                 <div className="flex flex-row-reverse justify-between">
                   <span className="inline-flex rounded-md shadow-sm">
                     <Button
