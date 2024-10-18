@@ -1,4 +1,4 @@
-FROM node:20-alpine AS BUILD_IMAGE
+FROM node:20-alpine AS build_image
 
 WORKDIR /app
 
@@ -48,7 +48,7 @@ RUN apk add --no-cache tzdata tini && rm -rf /tmp/*
 RUN npm install -g pnpm
 
 # copy from build image
-COPY --from=BUILD_IMAGE /app ./
+COPY --from=build_image /app ./
 
 ENTRYPOINT [ "/sbin/tini", "--" ]
 CMD [ "pnpm", "start" ]
