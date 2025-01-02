@@ -1,13 +1,12 @@
 import Button from '@app/components/Common/Button';
+import CachedImage from '@app/components/Common/CachedImage';
 import Modal from '@app/components/Common/Modal';
 import { Permission, useUser } from '@app/hooks/useUser';
 import defineMessages from '@app/utils/defineMessages';
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid';
 import type { default as IssueCommentType } from '@server/entity/IssueComment';
-import axios from 'axios';
 import { Field, Form, Formik } from 'formik';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, useState } from 'react';
 import { FormattedRelativeTime, useIntl } from 'react-intl';
@@ -49,7 +48,10 @@ const IssueComment = ({
 
   const deleteComment = async () => {
     try {
-      await axios.delete(`/api/v1/issueComment/${comment.id}`);
+      const res = await fetch(`/api/v1/issueComment/${comment.id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error();
     } catch (e) {
       // something went wrong deleting the comment
     } finally {
@@ -86,7 +88,8 @@ const IssueComment = ({
         </Modal>
       </Transition>
       <Link href={isActiveUser ? '/profile' : `/users/${comment.user.id}`}>
-        <Image
+        <CachedImage
+          type="avatar"
           src={comment.user.avatar}
           alt=""
           className="h-10 w-10 scale-100 transform-gpu rounded-full object-cover ring-1 ring-gray-500 transition duration-300 hover:scale-105"
@@ -175,9 +178,17 @@ const IssueComment = ({
               <Formik
                 initialValues={{ newMessage: comment.message }}
                 onSubmit={async (values) => {
-                  await axios.put(`/api/v1/issueComment/${comment.id}`, {
-                    message: values.newMessage,
-                  });
+                  const res = await fetch(
+                    `/api/v1/issueComment/${comment.id}`,
+                    {
+                      method: 'PUT',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ message: values.newMessage }),
+                    }
+                  );
+                  if (!res.ok) throw new Error();
 
                   if (onUpdate) {
                     onUpdate();

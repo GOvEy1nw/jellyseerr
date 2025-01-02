@@ -567,7 +567,10 @@ class JellyfinScanner {
   public async run(): Promise<void> {
     const settings = getSettings();
 
-    if (settings.main.mediaServerType != MediaServerType.JELLYFIN) {
+    if (
+      settings.main.mediaServerType != MediaServerType.JELLYFIN &&
+      settings.main.mediaServerType != MediaServerType.EMBY
+    ) {
       return;
     }
 
@@ -582,12 +585,7 @@ class JellyfinScanner {
       const userRepository = getRepository(User);
       const admin = await userRepository.findOne({
         where: { id: 1 },
-        select: [
-          'id',
-          'jellyfinAuthToken',
-          'jellyfinUserId',
-          'jellyfinDeviceId',
-        ],
+        select: ['id', 'jellyfinUserId', 'jellyfinDeviceId'],
         order: { id: 'ASC' },
       });
 
@@ -595,11 +593,9 @@ class JellyfinScanner {
         return this.log('No admin configured. Jellyfin sync skipped.', 'warn');
       }
 
-      const hostname = getHostname();
-
       this.jfClient = new JellyfinAPI(
-        hostname,
-        admin.jellyfinAuthToken,
+        getHostname(),
+        settings.jellyfin.apiKey,
         admin.jellyfinDeviceId
       );
 

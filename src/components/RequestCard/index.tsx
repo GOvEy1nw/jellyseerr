@@ -19,10 +19,9 @@ import {
 } from '@heroicons/react/24/solid';
 import { MediaRequestStatus } from '@server/constants/media';
 import type { MediaRequest } from '@server/entity/MediaRequest';
+import type { NonFunctionProperties } from '@server/interfaces/api/common';
 import type { MovieDetails } from '@server/models/Movie';
 import type { TvDetails } from '@server/models/Tv';
-import axios from 'axios';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -59,7 +58,7 @@ const RequestCardPlaceholder = () => {
 };
 
 interface RequestCardErrorProps {
-  requestData?: MediaRequest;
+  requestData?: NonFunctionProperties<MediaRequest>;
 }
 
 const RequestCardError = ({ requestData }: RequestCardErrorProps) => {
@@ -74,7 +73,10 @@ const RequestCardError = ({ requestData }: RequestCardErrorProps) => {
   });
 
   const deleteRequest = async () => {
-    await axios.delete(`/api/v1/media/${requestData?.media.id}`);
+    const res = await fetch(`/api/v1/media/${requestData?.media.id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error();
     mutate('/api/v1/media?filter=allavailable&take=20&sort=mediaAdded');
     mutate('/api/v1/request?filter=all&take=10&sort=modified&skip=0');
   };
@@ -113,7 +115,8 @@ const RequestCardError = ({ requestData }: RequestCardErrorProps) => {
                       className="group flex items-center"
                     >
                       <span className="avatar-sm">
-                        <Image
+                        <CachedImage
+                          type="avatar"
                           src={requestData.requestedBy.avatar}
                           alt=""
                           className="avatar-sm object-cover"
@@ -211,7 +214,7 @@ const RequestCardError = ({ requestData }: RequestCardErrorProps) => {
 };
 
 interface RequestCardProps {
-  request: MediaRequest;
+  request: NonFunctionProperties<MediaRequest>;
   onTitleData?: (requestId: number, title: MovieDetails | TvDetails) => void;
 }
 
@@ -236,16 +239,19 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
     data: requestData,
     error: requestError,
     mutate: revalidate,
-  } = useSWR<MediaRequest>(`/api/v1/request/${request.id}`, {
-    fallbackData: request,
-    refreshInterval: refreshIntervalHelper(
-      {
-        downloadStatus: request.media.downloadStatus,
-        downloadStatus4k: request.media.downloadStatus4k,
-      },
-      15000
-    ),
-  });
+  } = useSWR<NonFunctionProperties<MediaRequest>>(
+    `/api/v1/request/${request.id}`,
+    {
+      fallbackData: request,
+      refreshInterval: refreshIntervalHelper(
+        {
+          downloadStatus: request.media.downloadStatus,
+          downloadStatus4k: request.media.downloadStatus4k,
+        },
+        15000
+      ),
+    }
+  );
 
   const { mediaUrl: plexUrl, mediaUrl4k: plexUrl4k } = useDeepLinks({
     mediaUrl: requestData?.media?.mediaUrl,
@@ -255,15 +261,22 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
   });
 
   const modifyRequest = async (type: 'approve' | 'decline') => {
-    const response = await axios.post(`/api/v1/request/${request.id}/${type}`);
+    const res = await fetch(`/api/v1/request/${request.id}/${type}`, {
+      method: 'POST',
+    });
+    if (!res.ok) throw new Error();
+    const data = await res.json();
 
-    if (response) {
+    if (data) {
       revalidate();
     }
   };
 
   const deleteRequest = async () => {
-    await axios.delete(`/api/v1/request/${request.id}`);
+    const res = await fetch(`/api/v1/request/${request.id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error();
     mutate('/api/v1/request?filter=all&take=10&sort=modified&skip=0');
   };
 
@@ -271,9 +284,13 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
     setRetrying(true);
 
     try {
-      const response = await axios.post(`/api/v1/request/${request.id}/retry`);
+      const res = await fetch(`/api/v1/request/${request.id}/retry`, {
+        method: 'POST',
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
 
-      if (response) {
+      if (data) {
         revalidate();
       }
     } catch (e) {
@@ -329,6 +346,7 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
         {title.backdropPath && (
           <div className="absolute inset-0 z-0">
             <CachedImage
+              type="tmdb"
               alt=""
               src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${title.backdropPath}`}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -373,7 +391,8 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
                 className="group flex items-center"
               >
                 <span className="avatar-sm">
-                  <Image
+                  <CachedImage
+                    type="avatar"
                     src={requestData.requestedBy.avatar}
                     alt=""
                     className="avatar-sm object-cover"
@@ -586,6 +605,7 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
           className="w-20 flex-shrink-0 scale-100 transform-gpu cursor-pointer overflow-hidden rounded-md shadow-sm transition duration-300 hover:scale-105 hover:shadow-md sm:w-28"
         >
           <CachedImage
+            type="tmdb"
             src={
               title.posterPath
                 ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${title.posterPath}`

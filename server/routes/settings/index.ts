@@ -32,7 +32,6 @@ import { getHostname } from '@server/utils/getHostname';
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import fs from 'fs';
-import gravatarUrl from 'gravatar-url';
 import { escapeRegExp, merge, omit, set, sortBy } from 'lodash';
 import { rescheduleJob } from 'node-schedule';
 import path from 'path';
@@ -262,7 +261,7 @@ settingsRoutes.post('/jellyfin', async (req, res, next) => {
   try {
     const admin = await userRepository.findOneOrFail({
       where: { id: 1 },
-      select: ['id', 'jellyfinAuthToken', 'jellyfinUserId', 'jellyfinDeviceId'],
+      select: ['id', 'jellyfinUserId', 'jellyfinDeviceId'],
       order: { id: 'ASC' },
     });
 
@@ -270,7 +269,7 @@ settingsRoutes.post('/jellyfin', async (req, res, next) => {
 
     const jellyfinClient = new JellyfinAPI(
       getHostname(tempJellyfinSettings),
-      admin.jellyfinAuthToken ?? '',
+      tempJellyfinSettings.apiKey,
       admin.jellyfinDeviceId ?? ''
     );
 
@@ -318,13 +317,13 @@ settingsRoutes.get('/jellyfin/library', async (req, res, next) => {
   if (req.query.sync) {
     const userRepository = getRepository(User);
     const admin = await userRepository.findOneOrFail({
-      select: ['id', 'jellyfinAuthToken', 'jellyfinDeviceId', 'jellyfinUserId'],
+      select: ['id', 'jellyfinDeviceId', 'jellyfinUserId'],
       where: { id: 1 },
       order: { id: 'ASC' },
     });
     const jellyfinClient = new JellyfinAPI(
       getHostname(),
-      admin.jellyfinAuthToken ?? '',
+      settings.jellyfin.apiKey,
       admin.jellyfinDeviceId ?? ''
     );
 
@@ -376,20 +375,17 @@ settingsRoutes.get('/jellyfin/library', async (req, res, next) => {
 });
 
 settingsRoutes.get('/jellyfin/users', async (req, res) => {
-  const { externalHostname } = getSettings().jellyfin;
-  const jellyfinHost =
-    externalHostname && externalHostname.length > 0
-      ? externalHostname
-      : getHostname();
+  const settings = getSettings();
 
   const userRepository = getRepository(User);
   const admin = await userRepository.findOneOrFail({
-    select: ['id', 'jellyfinAuthToken', 'jellyfinDeviceId', 'jellyfinUserId'],
+    select: ['id', 'jellyfinDeviceId', 'jellyfinUserId'],
     where: { id: 1 },
     order: { id: 'ASC' },
   });
   const jellyfinClient = new JellyfinAPI(
-    admin.jellyfinAuthToken ?? '',
+    getHostname(),
+    settings.jellyfin.apiKey,
     admin.jellyfinDeviceId ?? ''
   );
 
@@ -398,9 +394,7 @@ settingsRoutes.get('/jellyfin/users', async (req, res) => {
   const users = resp.users.map((user) => ({
     username: user.Name,
     id: user.Id,
-    thumb: user.PrimaryImageTag
-      ? `${jellyfinHost}/Users/${user.Id}/Images/Primary/?tag=${user.PrimaryImageTag}&quality=90`
-      : gravatarUrl(user.Name, { default: 'mm', size: 200 }),
+    thumb: `/avatarproxy/${user.Id}`,
     email: user.Name,
   }));
 
@@ -744,11 +738,13 @@ settingsRoutes.get('/cache', async (_req, res) => {
   }));
 
   const tmdbImageCache = await ImageProxy.getImageStats('tmdb');
+  const avatarImageCache = await ImageProxy.getImageStats('avatar');
 
   return res.status(200).json({
     apiCaches,
     imageCache: {
       tmdb: tmdbImageCache,
+      avatar: avatarImageCache,
     },
   });
 });
