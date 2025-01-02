@@ -1,5 +1,5 @@
 import PlexAPI from '@server/api/plexapi';
-import dataSource, { getRepository } from '@server/datasource';
+import dataSource, { getRepository, isPgsql } from '@server/datasource';
 import DiscoverSlider from '@server/entity/DiscoverSlider';
 import { Session } from '@server/entity/Session';
 import { User } from '@server/entity/User';
@@ -23,6 +23,7 @@ import avatarproxy from '@server/routes/avatarproxy';
 import imageproxy from '@server/routes/imageproxy';
 import { appDataPermissions } from '@server/utils/appDataVolume';
 import { getAppVersion } from '@server/utils/appVersion';
+import createCustomProxyAgent from '@server/utils/customProxyAgent';
 import restartFlag from '@server/utils/restartFlag';
 import { getClientIp } from '@supercharge/request-ip';
 import { TypeormStore } from 'connect-typeorm/out';
@@ -38,7 +39,6 @@ import dns from 'node:dns';
 import net from 'node:net';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
-import { ProxyAgent, setGlobalDispatcher } from 'undici';
 import YAML from 'yamljs';
 
 if (process.env.forceIpv4First === 'true') {
@@ -66,9 +66,13 @@ app
 
     // Run migrations in production
     if (process.env.NODE_ENV === 'production') {
-      await dbConnection.query('PRAGMA foreign_keys=OFF');
-      await dbConnection.runMigrations();
-      await dbConnection.query('PRAGMA foreign_keys=ON');
+      if (isPgsql) {
+        await dbConnection.runMigrations();
+      } else {
+        await dbConnection.query('PRAGMA foreign_keys=OFF');
+        await dbConnection.runMigrations();
+        await dbConnection.query('PRAGMA foreign_keys=ON');
+      }
     }
 
     // Load Settings
@@ -76,8 +80,8 @@ app
     restartFlag.initializeSettings(settings.main);
 
     // Register HTTP proxy
-    if (settings.main.httpProxy) {
-      setGlobalDispatcher(new ProxyAgent(settings.main.httpProxy));
+    if (settings.main.proxy.enabled) {
+      await createCustomProxyAgent(settings.main.proxy);
     }
 
     // Migrate library types
