@@ -119,7 +119,7 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
                   </div>
                 )}
               </div>
-              <div className="pt-5">
+              <div>
                 <div className="flex flex-row-reverse justify-between">
                   <span className="inline-flex rounded-md shadow-sm">
                     <Button

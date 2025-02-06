@@ -41,13 +41,11 @@ import {
   ExclamationTriangleIcon,
   EyeSlashIcon,
   FilmIcon,
-  PlayIcon,
-} from '@heroicons/react/24/outline';
-import {
-  ChevronDownIcon,
   MinusCircleIcon,
+  PlayIcon,
   StarIcon,
-} from '@heroicons/react/24/solid';
+} from '@heroicons/react/24/outline';
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import type { RTRating } from '@server/api/rating/rottentomatoes';
 import { ANIME_KEYWORD_ID } from '@server/api/themoviedb/constants';
 import { IssueStatus } from '@server/constants/issue';
@@ -1243,14 +1241,26 @@ const TvDetails = ({ tv }: TvDetailsProps) => {
               </div>
             )}
             {!!streamingProviders.length && (
-              <div className="media-fact">
+              <div className="media-fact flex-col gap-1">
                 <span>{intl.formatMessage(messages.streamingproviders)}</span>
-                <span className="media-fact-value">
+                <span className="media-fact-value flex flex-row flex-wrap gap-5">
                   {streamingProviders.map((p) => {
                     return (
-                      <span className="block" key={`provider-${p.id}`}>
-                        {p.name}
-                      </span>
+                      <Tooltip content={p.name}>
+                        <span
+                          className="opacity-50 transition duration-300 hover:opacity-100"
+                          key={`provider-${p.id}`}
+                        >
+                          <CachedImage
+                            type="tmdb"
+                            src={'https://image.tmdb.org/t/p/w45/' + p.logoPath}
+                            alt={p.name}
+                            width={32}
+                            height={32}
+                            className="rounded-md"
+                          />
+                        </span>
+                      </Tooltip>
                     );
                   })}
                 </span>
