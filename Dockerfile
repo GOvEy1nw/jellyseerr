@@ -1,4 +1,4 @@
-FROM node:20-alpine AS BUILD_IMAGE
+FROM node:22-alpine AS BUILD_IMAGE
 
 WORKDIR /app
 
@@ -29,14 +29,14 @@ RUN pnpm build
 # remove development dependencies
 RUN pnpm prune --prod --ignore-scripts
 
-RUN rm -rf src server .next/cache
+RUN rm -rf src server .next/cache charts gen-docs docs
 
 RUN touch config/DOCKER
 
 RUN echo "{\"commitTag\": \"${COMMIT_TAG}\"}" > committag.json
 
 
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Metadata for Github Package Registry
 LABEL org.opencontainers.image.source="https://github.com/Fallenbagel/jellyseerr"
